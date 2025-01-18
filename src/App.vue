@@ -1,5 +1,5 @@
 <script>
-import { defineComponent, reactive } from "vue";
+import { defineComponent, useTemplateRef, ref, computed } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 import rawDisplay from "./helpers/rawDisplay.vue";
 import ContentImage from "./components/ContentImage.vue";
@@ -13,31 +13,74 @@ export default defineComponent({
     rawDisplay,
   },
   setup() {
-    const state = reactive({
+    const state = {
       availableComponents: [
         {
           type: "ContentImage",
-          id: 1,
+          position: 0,
+          json: [],
+          props: {
+            refPosition: 0,
+          },
         },
         {
           type: "ContentText",
-          id: 2,
-        }
+          position: 0,
+          json: [],
+          props: {
+            refPosition: 0,
+          },
+        },
       ],
-      newsletterContent: [],
-    });
-    function log(event) {
-      console.log(event);
+    };
+
+    const newsletterContent = ref([]);
+
+    const contentRefs = useTemplateRef("content-refs");
+
+    function addOrMove(event) {
+      console.log("addOrMove", event);
+
+      let i = 0;
+      newsletterContent.value.forEach((el, index) => {
+        const newEl = { ...el, props: { ...el.props } };
+        newEl.position = index;
+        newEl.props.refPosition = newEl.position
+
+        newsletterContent.value[index] = newEl;
+      });
+
     }
-    function checkMove(evt) {
-      console.log("Future index: " + evt.draggedContext.futureIndex);
-      console.log("element: " + evt.draggedContext.element.name);
+
+    function getJson() {
+      let json = [];
+      newsletterContent.value.forEach((el, index) => {
+        console.log("index")
+        let elJson = { ...el };
+        elJson.json = getComponent(index);
+
+        json.push(elJson);
+      });
+
+      return json;
+    }
+
+    function getComponent(index) {
+      if (!contentRefs.value) {
+        return { not: index };
+      }
+
+      return contentRefs.value
+        .filter((el) => el.$attrs.refPosition == index)
+        .map((el) => el.toJson());
     }
 
     return {
       state,
-      log,
-      checkMove,
+      newsletterContent,
+      addOrMove,
+      contentRefs,
+      getJson,
     };
   },
 });
@@ -51,12 +94,10 @@ export default defineComponent({
       <div>
         <draggable
           :list="state.availableComponents"
-          component="component"
-          :component-data="state.collapseComponentData"
-          @change="log"
           :group="{ name: 'people', pull: 'clone', put: false }"
         >
-          <component :is="element.type"
+          <component
+            :is="element.type"
             class="list-group-item bg-gray-300 m-1 p-3 rounded-md cursor-pointer"
             v-for="element in state.availableComponents"
             :key="element.name"
@@ -66,21 +107,24 @@ export default defineComponent({
       <div>
         <draggable
           class="dragArea list-group w-full"
-          :list="state.newsletterContent"
+          :list="newsletterContent"
           group="people"
-          @change="log"
-          :move="checkMove"
+          @add="addOrMove"
+          @move="addOrMove"
+          @change="addOrMove"
         >
-          <component :is="element.type"
+          <component
+            :is="element.type"
             class="list-group-item bg-gray-300 m-1 p-3 rounded-md cursor-pointer"
-            v-for="(element, index) in state.newsletterContent"
+            v-for="(element, index) in newsletterContent"
             :key="index"
-            :is-open="true"
+            ref="content-refs"
+            v-bind="element.props"
           />
         </draggable>
       </div>
       <div>
-        <rawDisplay :value="state.newsletterContent" />
+        <pre>{{ getJson() }}</pre>
       </div>
     </div>
   </main>

@@ -1,24 +1,27 @@
 <template>
     <div>
-        Image
-        <div v-if="this.isOpen">
-            OPEN
-        </div>
+        Image Pos: {{ $attrs.refPosition }}
     </div>
 </template>
 
 <script>
 import { ref } from 'vue';
 export default {
-    props: {
-        isOpen: {
-            type: Boolean,
-            default: false
-        }
-    },
-    setup () {
+    name: 'content-image',
+    setup() {
+        const isOpen = ref(false);
         
-    }
+        const toJson = () => {
+            return {
+                type: 'ContentImage',
+                
+            }
+        }
+
+        return {isOpen, toJson}
+    },
+    
+    
 }
 </script>
 
