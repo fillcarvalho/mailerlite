@@ -50,6 +50,15 @@ export default defineComponent({
         newsletterContent.value[index] = newEl;
       });
 
+      openComponents();
+
+    }
+
+    /**
+     * Opens all the components when they are at the content Board
+     */
+    function openComponents() {
+      contentRefs.value.map((el) => el.isOpen = true);
     }
 
     function getJson() {
