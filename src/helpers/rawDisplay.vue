@@ -2,21 +2,13 @@
 <template>
     <div>
       <h3>{{ title }}</h3>
-      <pre class="bg-gray-300 rounded-lg p-5">{{ value }}</pre>
+      <pre class="bg-gray-300 rounded-lg p-5">{{ value }} </pre>
+      <pre v-for="(ref, index) in refs" :key="index" class="bg-gray-300 rounded-lg p-5">{{ ref }} </pre>
     </div>
   </template>
-  <script>
-  export default {
-    props: {
-      title: {
-        default: '',
-        type: String,
-      },
-      value: {
-        required: true,
-      },
-    },
-  }
+  <script setup>
+  import {defineProps} from 'vue';
+  defineProps(['title', 'value', 'refs'])
   </script>
   <style scoped>
   pre {

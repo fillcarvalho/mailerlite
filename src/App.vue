@@ -5,7 +5,7 @@ import rawDisplay from "./helpers/rawDisplay.vue";
 import ContentImage from "./components/ContentImage.vue";
 import ContentText from "./components/ContentText.vue";
 
-export default defineComponent({
+export default {
   components: {
     draggable: VueDraggableNext,
     ContentImage,
@@ -38,9 +38,14 @@ export default defineComponent({
 
     const contentRefs = useTemplateRef("content-refs");
 
+    /**
+     * 
+     * Handles when one object is added or moves and passes to the
+     * components in which position it is on the newsletter board
+     * 
+     * @param event
+     */
     function addOrMove(event) {
-      console.log("addOrMove", event);
-
       let i = 0;
       newsletterContent.value.forEach((el, index) => {
         const newEl = { ...el, props: { ...el.props } };
@@ -61,12 +66,14 @@ export default defineComponent({
       contentRefs.value.map((el) => el.isOpen = true);
     }
 
+    /**
+     * Returning the json with all the component information
+     */
     function getJson() {
       let json = [];
       newsletterContent.value.forEach((el, index) => {
-        console.log("index")
         let elJson = { ...el };
-        elJson.json = getComponent(index);
+        elJson.json = getComponentJson(index);
 
         json.push(elJson);
       });
@@ -74,7 +81,10 @@ export default defineComponent({
       return json;
     }
 
-    function getComponent(index) {
+    /**
+     * Returns component's JSON
+     */
+    function getComponentJson(index) {
       if (!contentRefs.value) {
         return { not: index };
       }
@@ -92,7 +102,7 @@ export default defineComponent({
       getJson,
     };
   },
-});
+};
 </script>
 <template>
   <header class="text-center py-5">
