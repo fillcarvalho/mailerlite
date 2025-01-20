@@ -35,10 +35,10 @@ import { Carousel, Slide, Navigation } from "vue3-carousel";
 
 export default {
   name: "ContentImage",
+  emits: ["content-update"],
+  props: ["id", "currentImageId"],
   components: { Carousel, Slide, Navigation },
-  setup() {
-    const isOpen = ref(false);
-
+  setup(props, { emit }) {
     const currentSlide = ref(0);
     const slideTo = (nextSlide) => (currentSlide.value = nextSlide);
 
@@ -60,26 +60,53 @@ export default {
     };
 
     const images = Array.from({ length: 3 }, (_, index) => ({
-      id: index + 1,
-      url: `https://picsum.photos/800/600?random=${index + 1}`,
+      id: index,
+      url: `/src/assets/images/image_${index}.jpg`,
     }));
 
-    const toJson = () => {
-      return {
-        type: "ContentImage",
-        currentSlide
-      };
+    onBeforeMount(() => {
+      // Update the currentImage with the prop value
+      currentSlide.value = props.currentImageId;
+      // Emiting an event
+      updateImageAddressByIndex(props.currentImageId);
+    });
+
+    watch(currentSlide, (currentSlideValue) => {
+      updateImageAddressByIndex(currentSlideValue);
+    });
+
+    /**
+     * Update the image id and url at the parent component
+     * @param index
+     */
+    const updateImageAddressByIndex = (index) => {
+      currentImageAddress.value = images[index] ?? null;
+      if (currentImageAddress.value) {
+        console.log("getImageAddressByIndex", images[index]);
+        updateParent(currentImageAddress.value);
+      }
+    };
+
+    /**
+     * Updates the values at the parent
+     *
+     * @param newData
+     */
+    const updateParent = function (newData) {
+      emit("content-update", {
+        url: newData.url,
+        imageId: newData.id,
+        id: props.id,
+      });
     };
 
     return {
-      isOpen,
-      toJson,
       images,
       currentSlide,
       slideTo,
       galleryConfig,
       thumbnailsConfig,
-      images,
+      currentImageAddress,
     };
   },
 };
