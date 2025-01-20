@@ -6,7 +6,7 @@
       </Slide>
     </Carousel>
 
-    <Carousel v-bind="thumbnailsConfig" v-model="currentSlide">
+    <Carousel v-bind="thumbnailsConfig" v-model="currentSlide" class="mt-2">
       <Slide v-for="image in images" :key="image.id">
         <template #default="{ currentIndex, isActive }">
           <div
@@ -23,7 +23,14 @@
       </Slide>
 
       <template #addons>
-        <Navigation />
+        <Navigation>
+        <template #prev>
+          <span class="carousel__buttom">←</span>
+        </template>
+        <template #next>
+          <span class="carousel__buttom">→</span>
+        </template>
+      </Navigation>
       </template>
     </Carousel>
   </div>
@@ -61,7 +68,7 @@ export default {
       itemsToShow: 3,
       wrapAround: true,
       touchDrag: false,
-      gap: 0,
+      gap: 10,
     };
 
     const images = Array.from({ length: 3 }, (_, index) => ({
@@ -117,4 +124,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.carousel__buttom {
+  @apply text-white
+}
+</style>

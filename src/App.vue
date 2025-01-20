@@ -1,45 +1,63 @@
 <template>
-  <div class="container mx-auto my-3">
+  <div class="container mx-auto">
     <div class="col-1">
-      <button class="btn btn-secondary button" @click="add('image')">
-        Add Image
-      </button>
-      <button class="btn btn-secondary button" @click="add('text')">
-        Add Text
-      </button>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+        <button class="button button--green" @click="add('image')">
+          <i class="fa-regular fa-image"></i> Add Image
+        </button>
+        <button class="button button--green" @click="add('text')">
+          <i class="fa-regular fa-keyboard"></i> Add Text
+        </button>
+        <button
+          class="col-span-2 md:col-span-1 button button--green"
+          @click="getJson('text')"
+          :disabled="list.length < 1"
+        >
+          <i class="fa-solid fa-code"></i> Export Json
+        </button>
+      </div>
     </div>
+    <draggable
+      tag="div"
+      :list="list"
+      class="list-group"
+      item-key="index"
+      :animation="300"
+      handle=".handle"
+    >
+      <template #item="{ element, index }">
+        <div class="py-2">
+          <div>
+            <component
+              :is="element.type"
+              class="list-group-item bg-gray-300 p-3 mb-2 rounded-md cursor-pointer"
+              :key="index"
+              v-bind="element.props"
+              @content-update="contentUpdate"
+              :id="element.id"
+              :current-image-id="element.props.imageId"
+            />
 
-    <div class="col-7">
-      <h3>Draggable</h3>
-      <draggable
-        tag="div"
-        :list="list"
-        class="list-group"
-        item-key="index"
-        :animation="200"
-      >
-        <template #item="{ element, index }">
-          <div class="py-2">
-            <div>
-              <component
-                :is="element.type"
-                class="list-group-item bg-gray-300 m-1 p-3 rounded-md cursor-pointer"
-                :key="index"
-                v-bind="element.props"
-                @content-update="contentUpdate"
-                :id="element.id"
-                :current-image-id="element.props.imageId"
-              />
-              <i class="fa fa-times close" @click="removeAt(index)"></i>
-              <i class="fa-solid fa-clone" @click="duplicate(index)"></i>
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+              <button class="button button--red" @click="removeAt(index)">
+                <i class="fa fa-times close"></i> Remove
+              </button>
+              <button class="button button--blue" @click="duplicate(index)">
+                <i class="fa-solid fa-clone"></i> Clone
+              </button>
+              <button
+                class="col-span-2 md:col-span-1 button button--green handle"
+              >
+                <i class="fa-solid fa-up-down-left-right"></i> Drag-me
+              </button>
             </div>
           </div>
-        </template>
-      </draggable>
-    </div>
-    <div>
-      <pre>{{ getJson() }}</pre>
-    </div>
+        </div>
+      </template>
+    </draggable>
+  </div>
+  <div class="container mx-auto">
+    <pre>{{ getJson() }}</pre>
   </div>
 </template>
 
@@ -76,19 +94,20 @@ export default {
   setup() {
     const list = ref([]);
 
-    
     /**
      * Removes the element at a specific position on the array
-     * 
+     *
      * @param idx number
      */
     const removeAt = (idx) => {
-      list.value.splice(idx, 1);
+      if (confirm("Are you sure?")) {
+        list.value.splice(idx, 1);
+      }
     };
 
     /**
      * Duplicates the content element
-     * 
+     *
      * @param idx number
      */
     const duplicate = (idx) => {
@@ -131,6 +150,7 @@ export default {
      * Returning the json with all the component information
      */
     const getJson = () => {
+      console.log(list.value);
       return list.value;
     };
 
@@ -151,14 +171,14 @@ export default {
           item[0].props.imageUrl = value.url;
           item[0].props.imageId = value.imageId;
         } else {
-          throw new TypeError("Unhandled content type", filename)
+          throw new TypeError("Unhandled content type", filename);
         }
       }
     };
 
     /**
      * Returns an element from the content element list by Id
-     * @param idx 
+     * @param idx
      */
     const getItemById = (idx) => {
       return list.value.filter((e) => e.id == idx);
@@ -176,5 +196,19 @@ export default {
 };
 </script>
 <style scoped>
+.button {
+  @apply rounded border whitespace-nowrap transition duration-100 ease-in-out font-medium p-2;
+}
 
+.button--green {
+  @apply bg-green-500 hover:bg-green-600 text-white border-transparent focus-visible:bg-green-600 text-base leading-5 py-3 px-5 disabled:bg-gray-300 disabled:text-black disabled:hover:bg-gray-100 disabled:line-through;
+}
+
+.button--red {
+  @apply bg-red-500 hover:bg-red-600 border-0;
+}
+
+.button--blue {
+  @apply bg-blue-500 hover:bg-blue-600 border-0;
+}
 </style>
