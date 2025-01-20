@@ -8,8 +8,7 @@
       @blur="updateContent($event)"
       @paste="updateContent($event)"
       v-model="$attrs.text"
-      class="h-screen"
-      style="height: 250px"
+      class="h-52"
     ></richer>
   </div>
 </template>
@@ -17,6 +16,12 @@
 <script>
 import Richer from "richer-than-rich";
 import "richer-than-rich/dist/style.css";
+
+/**
+ * @todo: This text component is not working properly with the v-model. We need to replace it to
+ * avoid problems with the drag and drop because it's not reflecting the components new value
+ * when you try to change two text components order
+ */
 
 export default {
   emits: ["content-update"],
