@@ -140,7 +140,6 @@ export default {
       id++;
       const newElement = { ...obj, props: { ...obj.props } };
       newElement.id = id;
-      newElement.name = "Juan " + id;
       list.value.push(newElement);
     };
 
@@ -169,7 +168,7 @@ export default {
           item[0].props.imageUrl = value.url;
           item[0].props.imageId = value.imageId;
         } else {
-          throw new TypeError("Unhandled content type", filename);
+          throw new TypeError("Unhandled content type");
         }
       }
     };

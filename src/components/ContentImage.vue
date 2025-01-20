@@ -82,7 +82,6 @@ export default {
     const updateImageAddressByIndex = (index) => {
       currentImageAddress.value = images[index] ?? null;
       if (currentImageAddress.value) {
-        console.log("getImageAddressByIndex", images[index]);
         updateParent(currentImageAddress.value);
       }
     };
