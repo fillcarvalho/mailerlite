@@ -1,152 +1,180 @@
+<template>
+  <div class="container mx-auto my-3">
+    <div class="col-1">
+      <button class="btn btn-secondary button" @click="add('image')">
+        Add Image
+      </button>
+      <button class="btn btn-secondary button" @click="add('text')">
+        Add Text
+      </button>
+    </div>
+
+    <div class="col-7">
+      <h3>Draggable</h3>
+      <draggable
+        tag="div"
+        :list="list"
+        class="list-group"
+        item-key="index"
+        :animation="200"
+      >
+        <template #item="{ element, index }">
+          <div class="py-2">
+            <div>
+              <component
+                :is="element.type"
+                class="list-group-item bg-gray-300 m-1 p-3 rounded-md cursor-pointer"
+                :key="index"
+                v-bind="element.props"
+                @content-update="contentUpdate"
+                :id="element.id"
+                :current-image-id="element.props.imageId"
+              />
+              <i class="fa fa-times close" @click="removeAt(index)"></i>
+              <i class="fa-solid fa-clone" @click="duplicate(index)"></i>
+            </div>
+          </div>
+        </template>
+      </draggable>
+    </div>
+    <div>
+      <pre>{{ getJson() }}</pre>
+    </div>
+  </div>
+</template>
+
 <script>
-import { defineComponent, useTemplateRef, ref, computed } from "vue";
-import { VueDraggableNext } from "vue-draggable-next";
-import rawDisplay from "./helpers/rawDisplay.vue";
+var id = 0;
+import { ref } from "vue";
+import draggable from "vuedraggable";
 import ContentImage from "./components/ContentImage.vue";
 import ContentText from "./components/ContentText.vue";
 
+const BLOCK_DEFAULT_PROPS = {
+  imageUrl: null,
+  imageId: 0,
+  text: "",
+};
+
+const DEFAULT_IMAGE_ELEMENT = {
+  id: 0,
+  type: "ContentImage",
+  props: { ...BLOCK_DEFAULT_PROPS },
+};
+const DEFAULT_TEXT_ELEMENT = {
+  id: 0,
+  type: "ContentText",
+  props: { ...BLOCK_DEFAULT_PROPS },
+};
+
 export default {
   components: {
-    draggable: VueDraggableNext,
+    draggable,
     ContentImage,
     ContentText,
-    rawDisplay,
   },
   setup() {
-    const state = {
-      availableComponents: [
-        {
-          type: "ContentImage",
-          position: 0,
-          json: [],
-          props: {
-            refPosition: 0,
-          },
-        },
-        {
-          type: "ContentText",
-          position: 0,
-          json: [],
-          props: {
-            refPosition: 0,
-          },
-        },
-      ],
+    const list = ref([]);
+
+    
+    /**
+     * Removes the element at a specific position on the array
+     * 
+     * @param idx number
+     */
+    const removeAt = (idx) => {
+      list.value.splice(idx, 1);
     };
 
-    const newsletterContent = ref([]);
+    /**
+     * Duplicates the content element
+     * 
+     * @param idx number
+     */
+    const duplicate = (idx) => {
+      const elementToClone = list.value.find((el, index) => index === idx);
 
-    const contentRefs = useTemplateRef("content-refs");
+      if (elementToClone) {
+        id++;
+        const newElement = {
+          ...elementToClone,
+          props: { ...elementToClone.props },
+        };
+        newElement.id = id;
+        list.value.splice(idx, 0, newElement);
+      }
+    };
 
     /**
-     * 
-     * Handles when one object is added or moves and passes to the
-     * components in which position it is on the newsletter board
-     * 
-     * @param event
+     * Adds an element in the content element list
+     * @param type string
      */
-    function addOrMove(event) {
-      let i = 0;
-      newsletterContent.value.forEach((el, index) => {
-        const newEl = { ...el, props: { ...el.props } };
-        newEl.position = index;
-        newEl.props.refPosition = newEl.position
+    const add = (type) => {
+      let obj;
+      switch (type) {
+        case "image":
+          obj = DEFAULT_IMAGE_ELEMENT;
+          break;
+        case "text":
+          obj = DEFAULT_TEXT_ELEMENT;
+          break;
+      }
 
-        newsletterContent.value[index] = newEl;
-      });
-
-      openComponents();
-
-    }
-
-    /**
-     * Opens all the components when they are at the content Board
-     */
-    function openComponents() {
-      contentRefs.value.map((el) => el.isOpen = true);
-    }
+      id++;
+      const newElement = { ...obj, props: { ...obj.props } };
+      newElement.id = id;
+      newElement.name = "Juan " + id;
+      list.value.push(newElement);
+    };
 
     /**
      * Returning the json with all the component information
      */
-    function getJson() {
-      let json = [];
-      newsletterContent.value.forEach((el, index) => {
-        let elJson = { ...el };
-        elJson.json = getComponentJson(index);
-
-        json.push(elJson);
-      });
-
-      return json;
-    }
+    const getJson = () => {
+      return list.value;
+    };
 
     /**
-     * Returns component's JSON
+     * Receives the new values and update it at the object
+     * @param value Object
      */
-    function getComponentJson(index) {
-      if (!contentRefs.value) {
-        return { not: index };
+    const contentUpdate = (value) => {
+      if (!value.id) {
+        return;
       }
+      const item = getItemById(value.id);
 
-      return contentRefs.value
-        .filter((el) => el.$attrs.refPosition == index)
-        .map((el) => el.toJson());
-    }
+      if (item.length > 0) {
+        if (item[0].type === "ContentText") {
+          item[0].props.text = value.html;
+        } else if (item[0].type === "ContentImage") {
+          item[0].props.imageUrl = value.url;
+          item[0].props.imageId = value.imageId;
+        } else {
+          throw new TypeError("Unhandled content type", filename)
+        }
+      }
+    };
+
+    /**
+     * Returns an element from the content element list by Id
+     * @param idx 
+     */
+    const getItemById = (idx) => {
+      return list.value.filter((e) => e.id == idx);
+    };
 
     return {
-      state,
-      newsletterContent,
-      addOrMove,
-      contentRefs,
+      removeAt,
+      duplicate,
+      add,
       getJson,
+      list,
+      contentUpdate,
     };
   },
 };
 </script>
-<template>
-  <header class="text-center py-5">
-    <h1>MailerLite Newsletter Creator Assistant</h1>
-  </header>
-  <main>
-    <div class="grid grid-cols-3 gap-4">
-      <div>
-        <draggable
-          :list="state.availableComponents"
-          :group="{ name: 'people', pull: 'clone', put: false }"
-        >
-          <component
-            :is="element.type"
-            class="list-group-item bg-gray-300 m-1 p-3 rounded-md cursor-pointer"
-            v-for="element in state.availableComponents"
-            :key="element.name"
-          />
-        </draggable>
-      </div>
-      <div>
-        <draggable
-          class="dragArea list-group w-full"
-          :list="newsletterContent"
-          group="people"
-          @add="addOrMove"
-          @move="addOrMove"
-          @change="addOrMove"
-        >
-          <component
-            :is="element.type"
-            class="list-group-item bg-gray-300 m-1 p-3 rounded-md cursor-pointer"
-            v-for="(element, index) in newsletterContent"
-            :key="index"
-            ref="content-refs"
-            v-bind="element.props"
-          />
-        </draggable>
-      </div>
-      <div>
-        <pre>{{ getJson() }}</pre>
-      </div>
-    </div>
-  </main>
-</template>
+<style scoped>
 
-<style scoped></style>
+</style>
