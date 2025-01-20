@@ -47,7 +47,7 @@
             <button
               class="col-span-2 md:col-span-1 button button--green handle"
             >
-              <i class="fa-solid fa-up-down-left-right"></i> Drag-me
+              <i class="fa-solid fa-up-down-left-right"></i> Drag me
             </button>
           </div>
         </div>
