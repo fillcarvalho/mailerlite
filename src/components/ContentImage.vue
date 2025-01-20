@@ -5,7 +5,6 @@
         <img :src="image.url" alt="Gallery Image" class="gallery-image" />
       </Slide>
     </Carousel>
-
     <Carousel v-bind="thumbnailsConfig" v-model="currentSlide" class="mt-2">
       <Slide v-for="image in images" :key="image.id">
         <template #default="{ currentIndex, isActive }">
@@ -37,7 +36,7 @@
 </template>
 
 <script>
-import { ref, watch, onBeforeMount } from "vue";
+import { ref, watch, onBeforeMount, onUpdated } from "vue";
 import "vue3-carousel/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 
@@ -76,17 +75,6 @@ export default {
       url: `/src/assets/images/image_${index}.jpg`,
     }));
 
-    onBeforeMount(() => {
-      // Update the currentImage with the prop value
-      currentSlide.value = props.currentImageId;
-      // Emiting an event
-      updateImageAddressByIndex(props.currentImageId);
-    });
-
-    watch(currentSlide, (currentSlideValue) => {
-      updateImageAddressByIndex(currentSlideValue);
-    });
-
     /**
      * Update the image id and url at the parent component
      * @param index
@@ -112,6 +100,21 @@ export default {
       });
     };
 
+    watch(currentSlide, (currentSlideValue) => {
+      updateImageAddressByIndex(currentSlideValue);
+    });
+
+    /**
+     * Watching the props.CurrentImageId to make sure it's going to 
+     * be updated when the drag and drop changes the components props
+    */
+    watch(() => props.currentImageId, (newCurrentImageId) => {
+      // Update the currentImage with the prop value
+      currentSlide.value = props.currentImageId;
+      // Emiting an event
+      updateImageAddressByIndex(props.currentImageId);
+    }, { immediate:true });
+
     return {
       images,
       currentSlide,
@@ -126,6 +129,6 @@ export default {
 
 <style scoped>
 .carousel__buttom {
-  @apply text-white
+  @apply text-white bg-black bg-opacity-50 p-2 rounded
 }
 </style>
