@@ -27,30 +27,28 @@
     >
       <template #item="{ element, index }">
         <div class="py-2">
-          <div>
-            <component
-              :is="element.type"
-              class="list-group-item bg-gray-300 p-3 mb-2 rounded-md cursor-pointer"
-              :key="index"
-              v-bind="element.props"
-              @content-update="contentUpdate"
-              :id="element.id"
-              :current-image-id="element.props.imageId"
-            />
+          <component
+            :is="element.type"
+            class="list-group-item bg-gray-300 p-3 mb-2 rounded-md cursor-pointer"
+            :key="index"
+            v-bind="element.props"
+            @content-update="contentUpdate"
+            :id="element.id"
+            :current-image-id="element.props.imageId"
+          />
 
-            <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-              <button class="button button--red" @click="removeAt(index)">
-                <i class="fa fa-times close"></i> Remove
-              </button>
-              <button class="button button--blue" @click="duplicate(index)">
-                <i class="fa-solid fa-clone"></i> Clone
-              </button>
-              <button
-                class="col-span-2 md:col-span-1 button button--green handle"
-              >
-                <i class="fa-solid fa-up-down-left-right"></i> Drag-me
-              </button>
-            </div>
+          <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+            <button class="button button--red" @click="removeAt(index)">
+              <i class="fa fa-times close"></i> Remove
+            </button>
+            <button class="button button--blue" @click="duplicate(index)">
+              <i class="fa-solid fa-clone"></i> Clone
+            </button>
+            <button
+              class="col-span-2 md:col-span-1 button button--green handle"
+            >
+              <i class="fa-solid fa-up-down-left-right"></i> Drag-me
+            </button>
           </div>
         </div>
       </template>
