@@ -1,32 +1,46 @@
 <template>
-    <div>
-        TEXT pos: {{ $attrs.refPosition }}
-        <textarea v-if="isOpen" name="" id="" v-model="text"></textarea>
-    </div>
+  <div draggable="true">
+    <richer
+      @keyup="updateContent($event)"
+      @button-click="updateContent($event)"
+      @click="updateContent($event)"
+      @focus="updateContent($event)"
+      @blur="updateContent($event)"
+      @paste="updateContent($event)"
+      v-model="$attrs.text"
+      class="h-screen"
+      style="height: 250px"
+    ></richer>
+  </div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import Richer from "richer-than-rich";
+import "richer-than-rich/dist/style.css";
 
 export default {
-    name: 'content-text',
-    setup () {
+  emits: ["content-update"],
+  components: {
+    Richer,
+  },
+  name: "ContentText",
+  props: ["id"],
+  setup(props, { emit }) {
 
-        const text = ref('');
-        const isOpen = ref(false);
-        const toJson = () => {
-            return {
-                type: 'ContentText',
-            }
-        }
+    /**
+     * Inform parent about content update
+     * 
+     * @param event 
+     */
+    const updateContent = (event) => {
+      emit("content-update", { id: props.id, html: event.html });
+    };
 
-        return {
-            text, isOpen, toJson
-        }
-    }
-}
+    return {
+      updateContent,
+    };
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
