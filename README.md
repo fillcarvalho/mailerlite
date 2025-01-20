@@ -26,3 +26,296 @@ Note: Feel free to use any additional libraries, tools, or plugins that you thin
 
 Deadline: Within 5 calendar days of receiving the assignment.
 Delivery: When the task is ready, please share the repository URL for review by email.
+
+
+TEST CASES
+
+1)
+- Open the app
+- add a new Text element
+- Write: Welcome to the new MailerLite landing page builder
+
+Expected result:
+[
+  {
+    "id": 1,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "Welcome to the new MailerLite landing page builder<p></p>"
+    }
+  }
+]
+
+
+2)
+- Open the app
+- add a new Image element
+- Choose the image with the Computer
+
+Expected result:
+[
+  {
+    "id": 1,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_1.jpg",
+      "imageId": 1,
+      "text": ""
+    }
+  }
+]
+
+3)
+- Open the app
+- Add a new Image element
+- Choose the image with the Computer
+- Add a new Text element
+- Write: Welcome to the new MailerLite landing page builder
+
+Expected result:
+[
+  {
+    "id": 1,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_1.jpg",
+      "imageId": 1,
+      "text": ""
+    }
+  },
+  {
+    "id": 2,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p>Welcome to the new MailerLite landing page builder</p><p></p>"
+    }
+  }
+]
+
+4)
+- Open the app
+- Add a new Image element
+- Choose the image with the Computer
+- Add a new Text element
+- Write: Welcome to the new MailerLite landing page builder
+- Drag the Image to the Text Position using the Drag me button
+
+Expected result:
+[
+  {
+    "id": 2,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p>Welcome to the new MailerLite landing page builder</p><p></p>"
+    }
+  },
+  {
+    "id": 1,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_1.jpg",
+      "imageId": 1,
+      "text": ""
+    }
+  }
+]
+
+5)
+- Open the app
+- Add a new Image element
+- Choose the image with the Computer
+- Add a new Text element
+- Write: Welcome to the new MailerLite landing page builder
+- Drag the Image to the Text Position using the Drag me button
+- Clone the text element
+- Change the clonned element content to: Your vision, our tools – landing pages made simple. 
+- Use the text editor to make it bold
+
+Expected result:
+[
+  {
+    "id": 3,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p>Welcome to the new MailerLite landing page builder</p><p></p>"
+    }
+  },
+  {
+    "id": 2,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p><strong>Your vision, our tools – landing pages made simple.</strong></p><p></p>"
+    }
+  },
+  {
+    "id": 1,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_1.jpg",
+      "imageId": 1,
+      "text": ""
+    }
+  }
+]
+
+6)
+- Open the app
+- Add a new Image element
+- Choose the image with the Computer
+- Add a new Text element
+- Write: Welcome to the new MailerLite landing page builder
+- Drag the Image to the Text Position using the Drag me button
+- Clone the text element
+- Change the clonned element content to: Your vision, our tools – landing pages made simple. 
+- Use the text editor to make it bold
+- Clone the image element
+- Chose the image with the Letter
+
+Expected result:
+[
+  {
+    "id": 3,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p>Welcome to the new MailerLite landing page builder</p><p></p>"
+    }
+  },
+  {
+    "id": 2,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p><strong>Your vision, our tools – landing pages made simple.</strong></p><p></p>"
+    }
+  },
+  {
+    "id": 4,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_1.jpg",
+      "imageId": 1,
+      "text": ""
+    }
+  },
+  {
+    "id": 1,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_2.jpg",
+      "imageId": 2,
+      "text": ""
+    }
+  }
+]
+
+
+7)
+- Open the app
+- Add a new Image element
+- Choose the image with the Computer
+- Add a new Text element
+- Write: Welcome to the new MailerLite landing page builder
+- Drag the Image to the Text Position using the Drag me button
+- Clone the text element
+- Change the clonned element content to: Your vision, our tools – landing pages made simple. 
+- Use the text editor to make it bold
+- Clone the image element
+- Chose the image with the Letter
+- Drag the computer image to the top
+- Drag the letter image to before the "Your vision, our tools – landing pages made simple." text element
+
+Expected result:
+[
+  {
+    "id": 4,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_1.jpg",
+      "imageId": 1,
+      "text": ""
+    }
+  },
+  {
+    "id": 3,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p>Welcome to the new MailerLite landing page builder</p><p></p>"
+    }
+  },
+  {
+    "id": 1,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_2.jpg",
+      "imageId": 2,
+      "text": ""
+    }
+  },
+  {
+    "id": 2,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p><strong>Your vision, our tools – landing pages made simple.</strong></p><p></p>"
+    }
+  }
+]
+
+
+7)
+- Open the app
+- Add a new Image element
+- Choose the image with the Computer
+- Add a new Text element
+- Write: Welcome to the new MailerLite landing page builder
+- Remove the image component
+
+Expected result:
+[
+  {
+    "id": 2,
+    "type": "ContentText",
+    "props": {
+      "imageUrl": null,
+      "imageId": 0,
+      "text": "<p>Welcome to the new MailerLite landing page builder</p><p></p>"
+    }
+  }
+]
+
+8)
+- Open the app
+- Add a new Image element
+- Choose the image with the Computer
+- Add a new Text element
+- Write: Welcome to the new MailerLite landing page builder
+- Remove the text component
+
+Expected result:
+[
+  {
+    "id": 1,
+    "type": "ContentImage",
+    "props": {
+      "imageUrl": "/src/assets/images/image_1.jpg",
+      "imageId": 1,
+      "text": ""
+    }
+  }
+]
