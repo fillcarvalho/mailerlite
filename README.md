@@ -27,6 +27,9 @@ Note: Feel free to use any additional libraries, tools, or plugins that you thin
 Deadline: Within 5 calendar days of receiving the assignment.
 Delivery: When the task is ready, please share the repository URL for review by email.
 
+How to start the project:
+$npm run dev
+
 
 TEST CASES
 

@@ -35,6 +35,7 @@
             @content-update="contentUpdate"
             :id="element.id"
             :current-image-id="element.props.imageId"
+            :current-text="element.props.text"
           />
 
           <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
@@ -69,7 +70,7 @@ import ContentText from "./components/ContentText.vue";
 const BLOCK_DEFAULT_PROPS = {
   imageUrl: null,
   imageId: 0,
-  text: "",
+  text: "Lorem Ipsum",
 };
 
 const DEFAULT_IMAGE_ELEMENT = {
